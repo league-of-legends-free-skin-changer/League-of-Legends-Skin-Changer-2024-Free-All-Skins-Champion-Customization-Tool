@@ -19,7 +19,12 @@ jobs:
 
       - name: Update README.md
         run: |
-          echo -e "\n\nLast updated: $CURRENT_DATE" >> README.md
+          # Check if the line exists and replace it, otherwise add it
+          if grep -q "Last updated:" README.md; then
+            sed -i "s|Last updated:.*|Last updated: $CURRENT_DATE|" README.md
+          else
+            echo -e "\nLast updated: $CURRENT_DATE" >> README.md
+          fi
 
       - name: Commit changes
         run: |
