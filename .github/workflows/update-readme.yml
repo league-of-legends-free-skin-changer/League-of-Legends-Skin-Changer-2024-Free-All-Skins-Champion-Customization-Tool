@@ -1,0 +1,30 @@
+name: Update README with Last Update Timestamp
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set current date and time
+        id: datetime
+        run: echo "CURRENT_DATE=$(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_ENV
+
+      - name: Update README.md
+        run: |
+          echo -e "\n\nLast updated: $CURRENT_DATE" >> README.md
+
+      - name: Commit changes
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git add README.md
+          git commit -m "Update README with last update timestamp"
+          git push
